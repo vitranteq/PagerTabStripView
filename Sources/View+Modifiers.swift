@@ -26,6 +26,16 @@ extension View {
         return self.modifier(PagerSetAppearItemModifier(onPageAppear: action ?? {}))
     }
 
+/// Adds an action to perform when the user switches from this page to another page.
+/// This modifier is applied to a specific page.
+///
+/// - Parameter action: The action to perform.
+///
+/// - Returns: A view that triggers `action` when this view appears.
+    public func onPageDisappear(perform action: (() -> Void)?) -> some View {
+        return self.modifier(PagerSetDisappearModifier(onPageDisappear: action ?? {}))
+    }
+
 /// Sets the style for the pager view within the the current environment.
 ///
 /// - Parameter style: The style to apply to this pager view.

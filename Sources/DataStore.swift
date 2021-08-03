@@ -12,10 +12,12 @@ class DataItem {
     var view: AnyView?
     var tabViewDelegate: PagerTabViewDelegate?
     var appearCallback: (() -> Void)?
+    var disappearCallback: (() -> Void)?
 
-    init(view: AnyView?, tabViewDelegate: PagerTabViewDelegate? = nil, callback: (() -> Void)? = nil) {
+    init(view: AnyView?, tabViewDelegate: PagerTabViewDelegate? = nil, appearCallback: (() -> Void)? = nil, disappearCallback: (() -> Void)? = nil) {
         self.view = view
-        self.appearCallback = callback
+        self.appearCallback = appearCallback
+        self.disappearCallback = disappearCallback
         self.tabViewDelegate = tabViewDelegate
     }
 }
@@ -43,9 +45,16 @@ class DataStore: ObservableObject {
         if let item = items[index] {
             item.appearCallback = callback
         } else {
-            items[index] = DataItem(view: nil, callback: callback)
+            items[index] = DataItem(view: nil, appearCallback: callback)
         }
+    }
 
+    func setDisappear(callback: @escaping () -> Void, at index: Int) {
+        if let item = items[index] {
+            item.disappearCallback = callback
+        } else {
+            items[index] = DataItem(view: nil, disappearCallback: callback)
+        }
     }
 
     func remove(at index: Int) {

@@ -109,6 +109,7 @@ private struct WrapperPagerTabStripView<Content> : View where Content: View {
                 self.currentOffset = self.offsetFor(index: newIndex)
                 dataStore.items[newIndex]?.appearCallback?()
                 dataStore.items[selection]?.tabViewDelegate?.setState(state: .normal)
+                dataStore.items[selection]?.disappearCallback?()
                 if let tabViewDelegate = dataStore.items[newIndex]?.tabViewDelegate, newIndex != selection {
                     tabViewDelegate.setState(state: .selected)
                 }
