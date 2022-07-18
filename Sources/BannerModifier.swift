@@ -1,19 +1,17 @@
 //
-//  HeaderModifier.swift
+//  BannerModifier.swift
 //  PagerTabStripView
 //
-//  Copyright © 2021 Xmartlabs SRL. All rights reserved.
+//  Created by teq-macm1-073 on 18/07/2022.
 //
 
 import SwiftUI
 
 struct BannerModifier<BannerContent> : ViewModifier where BannerContent: View {
-    private var selection: Int
     @ViewBuilder private var bannerView: () -> BannerContent
 
-    public init (selection: Int, headerView: @escaping () -> BannerContent) {
-        self.selection = selection
-        self.bannerView = headerView
+    public init (bannerView: @escaping () -> BannerContent) {
+        self.bannerView = bannerView
     }
 
     func body(content: Content) -> some View {
@@ -23,6 +21,4 @@ struct BannerModifier<BannerContent> : ViewModifier where BannerContent: View {
             content
         }
     }
-
-    @EnvironmentObject private var dataStore: DataStore
 }

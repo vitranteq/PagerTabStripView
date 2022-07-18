@@ -32,7 +32,7 @@ public enum PagerStyle {
     case segmentedControl(backgroundColor: Color = .white,
                           padding: EdgeInsets = EdgeInsets(top: 5, leading: 10, bottom: 0, trailing: 10),
                           placedInToolbar: Bool = false,
-                          radiusShadown: CGFloat = 0.0)
+                          radiusShadow: CGFloat = 0.0)
     /// The height of the indicator bar
     case bar(indicatorBarHeight: CGFloat = 2, indicatorBarColor: Color = .blue, tabItemSpacing: CGFloat = 0, placedInToolbar: Bool = false, radiusShadow: CGFloat = 0.0)
     /// The height of the indicator bar

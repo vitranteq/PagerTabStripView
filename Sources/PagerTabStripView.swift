@@ -41,7 +41,7 @@ public struct PagerTabStripView<Content, BannerContent>: View where Content: Vie
     public init(swipeGestureEnabled: Bool = true,
                 selection: Binding<Int>? = nil,
                 @ViewBuilder content: @escaping () -> Content,
-                @ViewBuilder headerView: @escaping () -> BannerContent ) {
+                @ViewBuilder bannerView: @escaping () -> BannerContent ) {
         self.content = content
         if let selection = selection {
             useBinding = true
@@ -52,20 +52,19 @@ public struct PagerTabStripView<Content, BannerContent>: View where Content: Vie
         }
         self.swipeGestureEnabled = swipeGestureEnabled
         self._settings = StateObject(wrappedValue: PagerSettings())
-        self.bannerView = headerView
+        self.bannerView = bannerView
     }
 
     public var body: some View {
         WrapperPagerTabStripView(swipeGestureEnabled: swipeGestureEnabled,
                                  selection: useBinding ? $selectionBiding : $selectionState,
-                                 headerView: bannerView,
+                                 bannerView: bannerView,
                                  content: content)
             .environmentObject(self.settings)
     }
 }
 
 private struct WrapperPagerTabStripView<Content, BannerContent>: View where Content: View, BannerContent: View {
-
     private var content: () -> Content
     @ViewBuilder let bannerView: () -> BannerContent
 
@@ -91,12 +90,12 @@ private struct WrapperPagerTabStripView<Content, BannerContent>: View where Cont
 
     public init(swipeGestureEnabled: Bool = true,
                 selection: Binding<Int>,
-                headerView: @escaping () -> BannerContent,
+                bannerView: @escaping () -> BannerContent,
                 @ViewBuilder content: @escaping () -> Content) {
         self.swipeGestureEnabled = swipeGestureEnabled
         self.content = content
         self._selection = selection
-        self.bannerView = headerView
+        self.bannerView = bannerView
     }
 
     public var body: some View {
@@ -167,7 +166,7 @@ private struct WrapperPagerTabStripView<Content, BannerContent>: View where Cont
                 dataStore.items[selection]?.appearCallback?()
             }
         }
-        .modifier(BannerModifier(selection: selection, headerView: bannerView))
+        .modifier(BannerModifier(bannerView: bannerView))
         .modifier(NavBarModifier(selection: $selection))
         .environmentObject(self.dataStore)
         .clipped()
