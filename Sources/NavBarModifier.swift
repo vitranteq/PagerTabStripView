@@ -18,11 +18,23 @@ struct NavBarModifier: ViewModifier {
         VStack(alignment: .leading, spacing: 0) {
             if !style.placedInToolbar {
                 NavBarWrapperView(selection: $selection)
+                    .background(
+                        Color.white
+                            .shadow(radius: style.radiusShadow)
+                    )
+                    .zIndex(5)
+
                 content
             } else {
                 content.toolbar(content: {
                     ToolbarItem(placement: .principal) {
                         NavBarWrapperView(selection: $selection)
+                            .background(
+                                Color.clear
+                                    .shadow(radius: style.radiusShadow)
+                            )
+                            .zIndex(5)
+
                     }
                 })
             }
@@ -50,7 +62,7 @@ struct NavBarWrapperView: View {
             IndicatorBarView { Rectangle() }
         case .scrollableBarButton:
             ScrollableNavBarView(selection: $selection)
-        case .custom(_, _, _, let indicator, let background):
+        case .custom(_, _, _, _,let indicator, let background):
             FixedSizeNavBarView(selection: $selection) { background() }
             IndicatorBarView { indicator() }
         }

@@ -17,6 +17,7 @@ public extension PagerStyle {
         tabItemSpacing: CGFloat = defaultTabItemSpacing,
         tabItemHeight: CGFloat = defaultTabItemHeight,
         placedInToolbar: Bool = false,
+        radiusShadow: CGFloat = 0.0,
         @ViewBuilder indicator: @escaping () -> Indicator,
         @ViewBuilder background: @escaping () -> Background
     ) -> Self {
@@ -24,6 +25,7 @@ public extension PagerStyle {
             tabItemSpacing: tabItemSpacing,
             tabItemHeight: tabItemHeight,
             placedInToolbar: placedInToolbar,
+            radiusShadow: radiusShadow,
             indicator: { .init(indicator()) },
             background: { .init(background()) }
         )
@@ -33,12 +35,14 @@ public extension PagerStyle {
         tabItemSpacing: CGFloat = defaultTabItemSpacing,
         tabItemHeight: CGFloat = defaultTabItemHeight,
         placedInToolbar: Bool = false,
+        radiusShadow: CGFloat = 0.0,
         @ViewBuilder indicator: @escaping () -> Indicator
     ) -> Self {
         .custom(
             tabItemSpacing: tabItemSpacing,
             tabItemHeight: tabItemHeight,
             placedInToolbar: placedInToolbar,
+            radiusShadow: radiusShadow,
             indicator: indicator,
             background: { EmptyView() }
         )
@@ -48,12 +52,14 @@ public extension PagerStyle {
         tabItemSpacing: CGFloat = defaultTabItemSpacing,
         tabItemHeight: CGFloat = defaultTabItemHeight,
         placedInToolbar: Bool = false,
+        radiusShadow: CGFloat = 0.0,
         @ViewBuilder background: @escaping () -> Background
     ) -> Self {
         .custom(
             tabItemSpacing: tabItemSpacing,
             tabItemHeight: tabItemHeight,
             placedInToolbar: placedInToolbar,
+            radiusShadow: radiusShadow,
             indicator: { Rectangle() },
             background: background
         )
