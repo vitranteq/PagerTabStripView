@@ -12,8 +12,9 @@ class PagerSettings: ObservableObject {
 }
 
 @available(iOS 14.0, *)
-public struct PagerTabStripView<Content>: View where Content: View {
+public struct PagerTabStripView<Content, BannerContent>: View where Content: View, BannerContent: View {
     private var content: () -> Content
+    @ViewBuilder let bannerView: () -> BannerContent
 
     @Binding private var selectionBiding: Int
     @State private var selectionState = 0
@@ -23,7 +24,7 @@ public struct PagerTabStripView<Content>: View where Content: View {
 
     public init(swipeGestureEnabled: Bool = true,
                 selection: Binding<Int>? = nil,
-                @ViewBuilder content: @escaping () -> Content) {
+                @ViewBuilder content: @escaping () -> Content) where BannerContent == EmptyView {
         self.content = content
         if let selection = selection {
             useBinding = true
@@ -34,19 +35,38 @@ public struct PagerTabStripView<Content>: View where Content: View {
         }
         self.swipeGestureEnabled = swipeGestureEnabled
         self._settings = StateObject(wrappedValue: PagerSettings())
+        self.bannerView = { EmptyView() }
+    }
+
+    public init(swipeGestureEnabled: Bool = true,
+                selection: Binding<Int>? = nil,
+                @ViewBuilder content: @escaping () -> Content,
+                @ViewBuilder bannerView: @escaping () -> BannerContent ) {
+        self.content = content
+        if let selection = selection {
+            useBinding = true
+            self._selectionBiding = selection
+        } else {
+            useBinding = false
+            self._selectionBiding = .constant(0)
+        }
+        self.swipeGestureEnabled = swipeGestureEnabled
+        self._settings = StateObject(wrappedValue: PagerSettings())
+        self.bannerView = bannerView
     }
 
     public var body: some View {
         WrapperPagerTabStripView(swipeGestureEnabled: swipeGestureEnabled,
                                  selection: useBinding ? $selectionBiding : $selectionState,
+                                 bannerView: bannerView,
                                  content: content)
             .environmentObject(self.settings)
     }
 }
 
-private struct WrapperPagerTabStripView<Content>: View where Content: View {
-
+private struct WrapperPagerTabStripView<Content, BannerContent>: View where Content: View, BannerContent: View {
     private var content: () -> Content
+    @ViewBuilder let bannerView: () -> BannerContent
 
     @StateObject private var dataStore = DataStore()
 
@@ -70,10 +90,12 @@ private struct WrapperPagerTabStripView<Content>: View where Content: View {
 
     public init(swipeGestureEnabled: Bool = true,
                 selection: Binding<Int>,
+                bannerView: @escaping () -> BannerContent,
                 @ViewBuilder content: @escaping () -> Content) {
         self.swipeGestureEnabled = swipeGestureEnabled
         self.content = content
         self._selection = selection
+        self.bannerView = bannerView
     }
 
     public var body: some View {
@@ -144,9 +166,9 @@ private struct WrapperPagerTabStripView<Content>: View where Content: View {
                 dataStore.items[selection]?.appearCallback?()
             }
         }
+        .modifier(BannerModifier(bannerView: bannerView))
         .modifier(NavBarModifier(selection: $selection))
         .environmentObject(self.dataStore)
         .clipped()
     }
-
 }
