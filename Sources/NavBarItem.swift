@@ -30,12 +30,21 @@ struct NavBarItem: View {
                                                                     (id == currentIndex ? .selected : .normal))
                 } perform: {}
             }.background(
-                GeometryReader { geometry in
-                    Color.clear.onAppear {
-                        dataStore.items[id]?.itemWidth = geometry.size.width
-                        let widthUpdated = dataStore.items.filter({ $0.value.itemWidth ?? 0 > 0 }).count == dataStore.itemsCount
-                        dataStore.widthUpdated = dataStore.itemsCount > 0 && widthUpdated
+                GeometryReader { geometry -> Color in
+                    DispatchQueue.main.async {
+                        let newWidth = geometry.size.width
+                        if dataStore.items[id]?.itemWidth != newWidth {
+                            dataStore.widthUpdated = false
+
+                            DispatchQueue.main.async {
+                                dataStore.items[id]?.itemWidth = newWidth
+                                let widthUpdated = dataStore.items.filter({ $0.value.itemWidth ?? 0 > 0 }).count == dataStore.itemsCount
+                                dataStore.widthUpdated = dataStore.itemsCount > 0 && widthUpdated
+                            }
+                        }
                     }
+
+                    return Color.clear
                 }
             )
         }

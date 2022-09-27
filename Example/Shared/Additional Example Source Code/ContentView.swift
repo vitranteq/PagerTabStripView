@@ -24,6 +24,17 @@ struct ContentView: View {
                     .padding([.top, .bottom], 2)
                 }
 
+                NavigationLink(destination: ReorderView()) {
+                    VStack(alignment: .leading) {
+                        Text("Scrollable style + Re-order child tab")
+                            .font(.body)
+                            .padding(.bottom, 1)
+                        Text("Only label")
+                            .font(.subheadline)
+                    }
+                    .padding([.top, .bottom], 2)
+                }
+
                 NavigationLink(destination: InstagramView()) {
                     VStack(alignment: .leading) {
                         Text("Normal style")

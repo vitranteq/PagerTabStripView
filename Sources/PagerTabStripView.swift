@@ -135,6 +135,11 @@ private struct WrapperPagerTabStripView<Content>: View where Content: View {
                     tabViewDelegate.setState(state: .selected)
                 }
             }
+            .onChange(of: dataStore.forceUpdate) { _ in
+                if let tabViewDelegate = dataStore.items[selection]?.tabViewDelegate {
+                    tabViewDelegate.setState(state: .selected)
+                }
+            }
             .onChange(of: translation) { _ in
                 self.settings.contentOffset = translation - CGFloat(selection)*gproxy.size.width
             }
