@@ -11,12 +11,14 @@ class DataItem {
     var view: AnyView?
     var tabViewDelegate: PagerTabViewDelegate?
     var appearCallback: (() -> Void)?
+    var firstAppearCallback: (() -> Void)?
     @Published var itemWidth: Double?
 
-    init(view: AnyView? = nil, tabViewDelegate: PagerTabViewDelegate? = nil, callback: (() -> Void)? = nil) {
+    init(view: AnyView? = nil, tabViewDelegate: PagerTabViewDelegate? = nil, callback: (() -> Void)? = nil, firstAppearCallBack: (() -> Void)? = nil) {
         self.view = view
         self.appearCallback = callback
         self.tabViewDelegate = tabViewDelegate
+        self.firstAppearCallback = firstAppearCallBack
     }
 }
 
@@ -51,6 +53,14 @@ class DataStore: ObservableObject {
             item.appearCallback = callback
         } else {
             items[index] = DataItem(view: nil, callback: callback)
+        }
+    }
+
+    func setFirstAppear(callback: @escaping () -> Void, at index: Int) {
+        if let item = items[index] {
+            item.firstAppearCallback = callback
+        } else {
+            items[index] = DataItem(view: nil, firstAppearCallBack: callback)
         }
     }
 

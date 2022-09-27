@@ -10,6 +10,7 @@
 		28070C6026B1AF52002346E1 /* PagerTabViewStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28070C5F26B1AF52002346E1 /* PagerTabViewStyle.swift */; };
 		287D0A6E1C4B73BD004566D6 /* PagerTabStripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287D0A6D1C4B73BD004566D6 /* PagerTabStripTests.swift */; };
 		28F828881C494B2C00330CF4 /* PagerTabStripView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28F8287D1C494B2C00330CF4 /* PagerTabStripView.framework */; };
+		33005DB628E2B46200B9112B /* PagerSetFirstAppearItemModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33005DB528E2B46200B9112B /* PagerSetFirstAppearItemModifier.swift */; };
 		AB80DE8426BC93720022F57D /* PagerTabStripView.h in Headers */ = {isa = PBXBuildFile; fileRef = AB80DE8226BC93720022F57D /* PagerTabStripView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		AB80DE8626BC93720022F57D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AB80DE8326BC93720022F57D /* Info.plist */; };
 		C44D9C7F27DB7E990001CD14 /* PagerStyle+CustomCaseInitializers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44D9C7E27DB7E990001CD14 /* PagerStyle+CustomCaseInitializers.swift */; };
@@ -44,6 +45,7 @@
 		28F8287D1C494B2C00330CF4 /* PagerTabStripView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PagerTabStripView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		28F828871C494B2C00330CF4 /* PagerTabStripViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PagerTabStripViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		28F8288E1C494B2C00330CF4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		33005DB528E2B46200B9112B /* PagerSetFirstAppearItemModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerSetFirstAppearItemModifier.swift; sourceTree = "<group>"; };
 		AB80DE8226BC93720022F57D /* PagerTabStripView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PagerTabStripView.h; sourceTree = "<group>"; };
 		AB80DE8326BC93720022F57D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C44D9C7E27DB7E990001CD14 /* PagerStyle+CustomCaseInitializers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PagerStyle+CustomCaseInitializers.swift"; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 				E07FB08126AF3B7200CDCFD8 /* PagerTabViewDelegate.swift */,
 				28070C5F26B1AF52002346E1 /* PagerTabViewStyle.swift */,
 				C44D9C7E27DB7E990001CD14 /* PagerStyle+CustomCaseInitializers.swift */,
+				33005DB528E2B46200B9112B /* PagerSetFirstAppearItemModifier.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -282,6 +285,7 @@
 			files = (
 				E07034FB26D3D834002E854B /* ScrollableNavBarView.swift in Sources */,
 				E07FB07C26AF373600CDCFD8 /* View+Modifiers.swift in Sources */,
+				33005DB628E2B46200B9112B /* PagerSetFirstAppearItemModifier.swift in Sources */,
 				E07FB08226AF3B7200CDCFD8 /* PagerTabViewDelegate.swift in Sources */,
 				E07FB07E26AF377D00CDCFD8 /* PagerTabItemModifier.swift in Sources */,
 				E1FA589924C8BC1B0081FBE7 /* PagerTabStripView.swift in Sources */,

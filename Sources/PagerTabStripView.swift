@@ -12,6 +12,43 @@ class PagerSettings: ObservableObject {
 }
 
 @available(iOS 14.0, *)
+public struct LazyPagerTabStripView<Content, T>: View where T: Hashable, Content: View {
+    @Binding private var selection: Int
+    private var pages: [T]
+    private let itemView: (T, Bool) -> Content
+    @State private var appearTabStack: [T: Bool] = [:]
+    private var onFirstAppear: ((T) -> Void)?
+
+    public init(
+        selection: Binding<Int>,
+        pages: [T],
+        @ViewBuilder item: @escaping (T, Bool) -> Content
+    ) {
+        self.pages = pages
+        self.itemView = item
+        self._selection = selection
+    }
+
+    public var body: some View {
+        PagerTabStripView(selection: $selection) {
+            ForEach(pages, id: \.self) { tab in
+                itemView(tab, appearTabStack[tab] == true)
+                    .modifier(
+                        PagerSetFirstAppearItemModifier {
+                            handleFirstAppear(tab)
+                        }
+                    )
+            }
+        }
+    }
+
+    func handleFirstAppear(_ tab: T) {
+        guard appearTabStack[tab] == nil else { return }
+        appearTabStack[tab] = true
+    }
+}
+
+@available(iOS 14.0, *)
 public struct PagerTabStripView<Content>: View where Content: View {
     private var content: () -> Content
 
@@ -130,6 +167,7 @@ private struct WrapperPagerTabStripView<Content>: View where Content: View {
             .onChange(of: self.selection) { [selection] newIndex in
                 self.currentOffset = -(CGFloat(newIndex) * gproxy.size.width)
                 dataStore.items[newIndex]?.appearCallback?()
+                dataStore.items[newIndex]?.firstAppearCallback?()
                 dataStore.items[selection]?.tabViewDelegate?.setState(state: .normal)
                 if let tabViewDelegate = dataStore.items[newIndex]?.tabViewDelegate, newIndex != selection {
                     tabViewDelegate.setState(state: .selected)
@@ -142,11 +180,11 @@ private struct WrapperPagerTabStripView<Content>: View where Content: View {
                 self.selection = selection >= dataStore.itemsCount ? dataStore.itemsCount - 1 : selection
                 dataStore.items[selection]?.tabViewDelegate?.setState(state: .selected)
                 dataStore.items[selection]?.appearCallback?()
+                dataStore.items[selection]?.firstAppearCallback?()
             }
         }
         .modifier(NavBarModifier(selection: $selection))
         .environmentObject(self.dataStore)
         .clipped()
     }
-
 }
