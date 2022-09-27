@@ -33,7 +33,7 @@ enum Tab: Hashable {
 
 class ViewModel: ObservableObject {
     @Published var tabs1: [Tab] = [.blue, .red, .green, .purple]
-    @Published var isReordered = true
+    @Published var isReordered = false
 }
 
 struct ReorderView: View {

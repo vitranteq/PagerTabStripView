@@ -31,9 +31,6 @@ struct PagerTabItemModifier<NavTabView: View>: ViewModifier {
                 }
                 .onChange(of: needUpdate) { _ in
                     setItemView(from: reader)
-
-                    // render navbar again
-                    dataStore.forceUpdate = needUpdate
                 }
         }
     }
@@ -45,6 +42,9 @@ struct PagerTabItemModifier<NavTabView: View>: ViewModifier {
         let tabViewDelegate = tabView as? PagerTabViewDelegate
         dataStore.setView(AnyView(tabView), at: index)
         dataStore.setTabViewDelegate(tabViewDelegate, at: index)
+
+        // render navbar if needed
+        dataStore.forceUpdate = needUpdate
     }
 
     @EnvironmentObject private var dataStore: DataStore
