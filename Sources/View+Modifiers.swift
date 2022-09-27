@@ -32,4 +32,15 @@ extension View {
     public func pagerTabStripViewStyle(_ style: PagerStyle) -> some View {
         return self.environment(\.pagerStyle, style)
     }
+
+    @ViewBuilder
+    public func showViewIf(_ isShow: Bool) -> some View {
+        if isShow {
+            self
+                .transition(.opacity.animation(.easeIn(duration: 0.5)))
+        } else {
+            Color.clear
+                .transition(.opacity.animation(.easeIn(duration: 1)))
+        }
+    }
 }
