@@ -12,8 +12,8 @@ extension View {
 /// Sets the navigation bar item associated with this page.
 ///
 /// - Parameter pagerTabView: The navigation bar item to associate with this page.
-    public func pagerTabItem<V>(@ViewBuilder _ pagerTabView: @escaping () -> V) -> some View where V: View {
-        return self.modifier(PagerTabItemModifier(navTabView: pagerTabView))
+    public func pagerTabItem<V>(forceUpdate: Bool = false, @ViewBuilder _ pagerTabView: @escaping () -> V) -> some View where V: View {
+        return self.modifier(PagerTabItemModifier(forceUpdate: forceUpdate, navTabView: pagerTabView))
     }
 
 /// Adds an action to perform when the user switches to this page, either by scrolling to it or tapping its tab.

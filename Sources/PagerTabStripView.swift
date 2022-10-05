@@ -38,6 +38,10 @@ public struct LazyPagerTabStripView<Content, T>: View where T: Hashable, Content
                             handleFirstAppear(tab)
                         }
                     )
+                    .modifier(
+                        PagerSetAppearItemModifier {
+                        }
+                    )
             }
         }
     }

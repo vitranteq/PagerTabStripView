@@ -22,8 +22,9 @@ internal struct FixedSizeNavBarView<BG: View>: View {
         HStack(spacing: style.tabItemSpacing) {
             if dataStore.itemsCount > 0 && settings.width > 0 {
                 ForEach(0...dataStore.itemsCount-1, id: \.self) { idx in
-                    NavBarItem(id: idx, selection: $selection)
-                        .frame(height: self.style.tabItemHeight)
+//                    NavBarItem(id: idx, selection: $selection)
+//                        .frame(height: self.style.tabItemHeight)
+                    Text("")
                 }
             }
         }

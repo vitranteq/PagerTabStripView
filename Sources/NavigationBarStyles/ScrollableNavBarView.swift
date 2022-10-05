@@ -25,7 +25,7 @@ internal struct ScrollableNavBarView: View {
                     HStack(spacing: style.tabItemSpacing) {
                         if dataStore.itemsCount > 0 {
                             ForEach(0..<dataStore.itemsCount, id: \.self) { idx in
-                                NavBarItem(id: idx, selection: $selection)
+                                NavBarItem(id: idx,view: (dataStore.items[idx]?.view) ?? AnyView(EmptyView()) ,selection: $selection)
                             }
                         }
                     }
