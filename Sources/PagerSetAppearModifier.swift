@@ -18,7 +18,7 @@ struct PagerSetAppearItemModifier: ViewModifier {
     func body(content: Content) -> some View {
         GeometryReader { reader in
             content
-                .onChange(of: dataStore.forcepdateIndex, perform: { newValue in
+                .onChange(of: dataStore.forceUpdateIndex, perform: { newValue in
                     DispatchQueue.main.async {
                         let frame = reader.frame(in: .named("PagerViewScrollView"))
                         let newIndex = Int(round(frame.minX / self.settings.width))
@@ -31,11 +31,9 @@ struct PagerSetAppearItemModifier: ViewModifier {
                 .onAppear {
                     DispatchQueue.main.async {
                         let frame = reader.frame(in: .named("PagerViewScrollView"))
-                        let newIndex = Int(round(frame.minX / self.settings.width))
-                        if dataStore.items[index] == nil {
-                            index = newIndex
-                            dataStore.setAppear(callback: onPageAppear, at: index)
-                        }
+                        guard frame != .zero else { return }
+                        index = Int(round(frame.minX / self.settings.width))
+                        dataStore.setAppear(callback: onPageAppear, at: index)
                     }
                 }
         }

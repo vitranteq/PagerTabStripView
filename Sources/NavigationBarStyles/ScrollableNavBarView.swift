@@ -25,7 +25,7 @@ internal struct ScrollableNavBarView: View {
                     HStack(spacing: style.tabItemSpacing) {
                         if dataStore.itemsCount > 0 {
                             ForEach(0..<dataStore.itemsCount, id: \.self) { idx in
-                                NavBarItem(id: idx,view: (dataStore.items[idx]?.view) ?? AnyView(EmptyView()) ,selection: $selection)
+                                NavBarItem(id: idx, selection: $selection)
                             }
                         }
                     }
@@ -54,6 +54,11 @@ internal struct ScrollableNavBarView: View {
             .onChange(of: self.selection) { newSelection in
                 withAnimation {
                     value.scrollTo(newSelection, anchor: .center)
+                }
+            }
+            .onChange(of: dataStore.forceUpdateIndex) { _ in
+                withAnimation {
+                    value.scrollTo(self.selection, anchor: .center)
                 }
             }
         }
@@ -140,6 +145,19 @@ internal struct IndicatorScrollableBarView: View {
                 var newPosition = items.map({return $0.value.itemWidth ?? 0}).reduce(0, +)
                 newPosition += (style.tabItemSpacing * CGFloat(newValue)) + selectedItemWidth/2
                 position = newPosition
+            }
+            .onChange(of: dataStore.forceUpdateIndex) { _ in
+                DispatchQueue.main.async {
+                    let items = dataStore.items.filter { index, _ in
+                        index < selection
+                    }
+                    selectedItemWidth = dataStore.items[selection]?.itemWidth ?? 0
+                    var newPosition = items.map({return $0.value.itemWidth ?? 0}).reduce(0, +)
+                    newPosition += (style.tabItemSpacing * CGFloat(selection)) + selectedItemWidth/2
+//                    withAnimation {
+                        position = newPosition
+//                    }
+                }
             }
         }
 

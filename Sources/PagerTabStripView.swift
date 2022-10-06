@@ -119,14 +119,14 @@ private struct WrapperPagerTabStripView<Content>: View where Content: View {
 
     public var body: some View {
         GeometryReader { gproxy in
-            LazyHStack(spacing: 0) {
+            HStack(spacing: 0) {
                 content()
                     .frame(width: gproxy.size.width)
             }
             .coordinateSpace(name: "PagerViewScrollView")
             .offset(x: -CGFloat(self.selection) * gproxy.size.width)
             .offset(x: self.translation)
-            .animation(.interactiveSpring(response: 0.5, dampingFraction: 1.00, blendDuration: 0.25), value: selection)
+//            .animation(.interactiveSpring(response: 0.5, dampingFraction: 1.00, blendDuration: 0.25), value: selection)
             .animation(.interactiveSpring(response: 0.15, dampingFraction: 0.86, blendDuration: 0.25), value: translation)
             .gesture(
                 DragGesture(minimumDistance: 25).updating(self.$translation) { value, state, _ in
@@ -185,6 +185,14 @@ private struct WrapperPagerTabStripView<Content>: View where Content: View {
                 dataStore.items[selection]?.tabViewDelegate?.setState(state: .selected)
                 dataStore.items[selection]?.appearCallback?()
                 dataStore.items[selection]?.firstAppearCallback?()
+            }
+            .onChange(of: dataStore.forceUpdateIndex) { _ in
+                DispatchQueue.main.async {
+                    dataStore.items.forEach { (key, item) in
+                        item.tabViewDelegate?.setState(state: .normal)
+                    }
+                    dataStore.items[selection]?.tabViewDelegate?.setState(state: .selected)
+                }
             }
         }
         .modifier(NavBarModifier(selection: $selection))
