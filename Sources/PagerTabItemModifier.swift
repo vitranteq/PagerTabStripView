@@ -30,7 +30,9 @@ struct PagerTabItemModifier<NavTabView: View>: ViewModifier {
                     dataStore.remove(at: index)
                 }
                 .onChange(of: needUpdate) { _ in
-                    setItemView(from: reader)
+                    DispatchQueue.main.async {
+                        setItemView(from: reader)
+                    }
                 }
         }
     }
