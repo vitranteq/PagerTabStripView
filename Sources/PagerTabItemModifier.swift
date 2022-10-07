@@ -22,11 +22,8 @@ struct PagerTabItemModifier<NavTabView: View>: ViewModifier {
             content
                 .onAppear {
                     DispatchQueue.main.async {
-                        let frame = reader.frame(in: .named("PagerViewScrollView"))
-                        guard frame != .zero else { return }
-                        let newIndex = Int(round(frame.minX / self.settings.width))
-                        print("+++ frame onAppear \(frame)")
-                        if dataStore.items[newIndex]?.view != nil {
+                        guard let newIndex = getIndex(reader) else { return }
+                        if dataStore.items[newIndex]?.view != nil { // add child tab
                             if newIndex+1 <= dataStore.itemsCount {
                                 for i in (newIndex+1...dataStore.itemsCount).reversed() {
                                     dataStore.items[i] = dataStore.items[i-1]
@@ -35,9 +32,8 @@ struct PagerTabItemModifier<NavTabView: View>: ViewModifier {
                             dataStore.remove(at: newIndex)
                             index = newIndex
                             setData(at: newIndex)
-
                             dataStore.forceUpdateIndex.toggle()
-                        } else {
+                        } else { // first add child tab
                             index = newIndex
                             setData(at: index)
                         }
@@ -45,33 +41,27 @@ struct PagerTabItemModifier<NavTabView: View>: ViewModifier {
                 }
                 .onDisappear {
                     DispatchQueue.main.async {
-                        dataStore.items[index]?.tabViewDelegate?.setState(state: .normal)
-                        let frame = reader.frame(in: .named("PagerViewScrollView"))
-                        print("+++ frame onDisappear \(frame)")
-//                        let newIndex = Int(round(frame.minX / self.settings.width))
-                        if frame == .zero, index < dataStore.itemsCount - 1 { // khi frame sai thì đang remove một item
+                        if getIndex(reader) == nil, index < dataStore.itemsCount - 1 { // Remove child tab
                             let lastItem = dataStore.items[dataStore.itemsCount - 1]
                             dataStore.remove(at: dataStore.itemsCount - 1)
                             for i in index..<dataStore.itemsCount - 1 {
                                 dataStore.items[i] = dataStore.items[i + 1]
                             }
-//                            dataStore.remove(at: dataStore.itemsCount - 1)
                             dataStore.items[dataStore.itemsCount - 1] = lastItem
                             dataStore.forceUpdateIndex.toggle()
-                        } else {
+                        } else { // disappear child tab
+                            dataStore.items[index]?.tabViewDelegate?.setState(state: .normal)
                             dataStore.remove(at: index)
                         }
                     }
                 }
                 .onChange(of: dataStore.forceUpdateIndex) { newValue in
-                    let frame = reader.frame(in: .named("PagerViewScrollView"))
-                    let newIndex = Int(round(frame.minX / self.settings.width))
-                    index = newIndex
+                    if let newIndex = getIndex(reader) {
+                        index = newIndex
+                    }
                 }
-                .onChange(of: forceUpdate) { _ in
-                    let frame = reader.frame(in: .named("PagerViewScrollView"))
-                    let newIndex = Int(round(frame.minX / self.settings.width))
-                    if newIndex != index {
+                .onChange(of: forceUpdate) { _ in // re-oder child tab
+                    if let newIndex = getIndex(reader), newIndex != index {
                         let oldData = dataStore.items[index]
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                             dataStore.items[newIndex] = oldData
@@ -91,5 +81,11 @@ struct PagerTabItemModifier<NavTabView: View>: ViewModifier {
         let tabViewDelegate = tabView as? PagerTabViewDelegate
         dataStore.setView(AnyView(tabView), at: index)
         dataStore.setTabViewDelegate(tabViewDelegate, at: index)
+    }
+    
+    func  getIndex(_ reader: GeometryProxy) -> Int? {
+        let frame = reader.frame(in: .named("PagerViewScrollView"))
+        guard frame != .zero else { return nil }
+        return Int(round(frame.minX / self.settings.width))
     }
 }

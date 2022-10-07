@@ -20,20 +20,20 @@ struct PagerSetAppearItemModifier: ViewModifier {
             content
                 .onChange(of: dataStore.forceUpdateIndex, perform: { newValue in
                     DispatchQueue.main.async {
-                        let frame = reader.frame(in: .named("PagerViewScrollView"))
-                        let newIndex = Int(round(frame.minX / self.settings.width))
-                        if newIndex >= 0, newIndex < dataStore.itemsCount {
+                        if let newIndex = getIndex(reader),
+                            newIndex >= 0,
+                            newIndex < dataStore.itemsCount {
+                            dataStore.setAppear(callback: onPageAppear, at: newIndex)
                             index = newIndex
-                            dataStore.setAppear(callback: onPageAppear, at: index)
                         }
                     }
                 })
                 .onAppear {
                     DispatchQueue.main.async {
-                        let frame = reader.frame(in: .named("PagerViewScrollView"))
-                        guard frame != .zero else { return }
-                        index = Int(round(frame.minX / self.settings.width))
-                        dataStore.setAppear(callback: onPageAppear, at: index)
+                        if let index = getIndex(reader) {
+                            dataStore.setAppear(callback: onPageAppear, at: index)
+                            self.index = index
+                        }
                     }
                 }
         }
@@ -43,4 +43,10 @@ struct PagerSetAppearItemModifier: ViewModifier {
     @EnvironmentObject private var settings: PagerSettings
     @Environment(\.pagerStyle) var style: PagerStyle
     @State private var index = -1
+    
+    private func getIndex(_ reader: GeometryProxy) -> Int? {
+        let frame = reader.frame(in: .named("PagerViewScrollView"))
+        guard frame != .zero else { return nil }
+        return Int(round(frame.minX / self.settings.width))
+    }
 }
