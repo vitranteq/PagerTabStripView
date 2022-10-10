@@ -18,7 +18,7 @@ struct PagerSetFirstAppearItemModifier: ViewModifier {
     func body(content: Content) -> some View {
         GeometryReader { reader in
             content
-                .onChange(of: dataStore.forceUpdateIndex) { _ in
+                .onChange(of: dataStore.forceUpdate) { _ in
                     DispatchQueue.main.async {
                         if let newIndex = getIndex(reader),
                            newIndex >= 0,

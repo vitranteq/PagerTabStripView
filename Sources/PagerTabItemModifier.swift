@@ -10,11 +10,11 @@ import SwiftUI
 struct PagerTabItemModifier<NavTabView: View>: ViewModifier {
 
     private var navTabView: () -> NavTabView
-    private var forceUpdate: Bool
+    private var reOrderChildTab: Bool
 
-    init(forceUpdate: Bool, navTabView: @escaping () -> NavTabView) {
+    init(reOrderChildTab: Bool, navTabView: @escaping () -> NavTabView) {
         self.navTabView = navTabView
-        self.forceUpdate = forceUpdate
+        self.reOrderChildTab = reOrderChildTab
     }
 
     func body(content: Content) -> some View {
@@ -32,7 +32,7 @@ struct PagerTabItemModifier<NavTabView: View>: ViewModifier {
                             dataStore.remove(at: newIndex)
                             index = newIndex
                             setData(at: newIndex)
-                            dataStore.forceUpdateIndex.toggle()
+                            dataStore.forceUpdate.toggle()
                         } else { // first add child tab
                             index = newIndex
                             setData(at: index)
@@ -48,19 +48,19 @@ struct PagerTabItemModifier<NavTabView: View>: ViewModifier {
                                 dataStore.items[i] = dataStore.items[i + 1]
                             }
                             dataStore.items[dataStore.itemsCount - 1] = lastItem
-                            dataStore.forceUpdateIndex.toggle()
+                            dataStore.forceUpdate.toggle()
                         } else { // disappear child tab
                             dataStore.items[index]?.tabViewDelegate?.setState(state: .normal)
                             dataStore.remove(at: index)
                         }
                     }
                 }
-                .onChange(of: dataStore.forceUpdateIndex) { newValue in
+                .onChange(of: dataStore.forceUpdate) { newValue in
                     if let newIndex = getIndex(reader) {
                         index = newIndex
                     }
                 }
-                .onChange(of: forceUpdate) { _ in // re-oder child tab
+                .onChange(of: reOrderChildTab) { _ in // re-order child tab
                     if let newIndex = getIndex(reader), newIndex != index {
                         let oldData = dataStore.items[index]
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {

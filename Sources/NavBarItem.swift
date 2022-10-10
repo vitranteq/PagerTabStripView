@@ -32,7 +32,7 @@ struct NavBarItem: View {
             }.background(
                 GeometryReader { geometry in
                     Color.clear
-                        .onChange(of: dataStore.forceUpdateIndex, perform: { newValue in
+                        .onChange(of: dataStore.forceUpdate, perform: { _ in
                             dataStore.items[id]?.itemWidth = geometry.size.width
                             let widthUpdated = dataStore.items.filter({ $0.value.itemWidth ?? 0 > 0 }).count == dataStore.itemsCount
                             dataStore.widthUpdated = dataStore.itemsCount > 0 && widthUpdated

@@ -56,7 +56,7 @@ internal struct ScrollableNavBarView: View {
                     value.scrollTo(newSelection, anchor: .center)
                 }
             }
-            .onChange(of: dataStore.forceUpdateIndex) { _ in
+            .onChange(of: dataStore.forceUpdate) { _ in
                 withAnimation {
                     value.scrollTo(self.selection, anchor: .center)
                 }
@@ -146,7 +146,7 @@ internal struct IndicatorScrollableBarView: View {
                 newPosition += (style.tabItemSpacing * CGFloat(newValue)) + selectedItemWidth/2
                 position = newPosition
             }
-            .onChange(of: dataStore.forceUpdateIndex) { _ in
+            .onChange(of: dataStore.forceUpdate) { _ in
                 DispatchQueue.main.async {
                     let items = dataStore.items.filter { index, _ in
                         index < selection

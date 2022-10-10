@@ -38,10 +38,6 @@ public struct LazyPagerTabStripView<Content, T>: View where T: Hashable, Content
                             handleFirstAppear(tab)
                         }
                     )
-                    .modifier(
-                        PagerSetAppearItemModifier {
-                        }
-                    )
             }
         }
     }
@@ -186,12 +182,11 @@ private struct WrapperPagerTabStripView<Content>: View where Content: View {
                 dataStore.items[selection]?.appearCallback?()
                 dataStore.items[selection]?.firstAppearCallback?()
             }
-            .onChange(of: dataStore.forceUpdateIndex) { _ in
+            .onChange(of: dataStore.forceUpdate) { _ in
                 DispatchQueue.main.async {
                     dataStore.items.forEach { (key, item) in
-                        item.tabViewDelegate?.setState(state: .normal)
+                        item.tabViewDelegate?.setState(state: key == selection ? .selected : .normal)
                     }
-                    dataStore.items[selection]?.tabViewDelegate?.setState(state: .selected)
                 }
             }
         }
