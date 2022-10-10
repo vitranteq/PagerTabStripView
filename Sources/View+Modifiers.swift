@@ -43,4 +43,17 @@ extension View {
                 .transition(.opacity.animation(.easeIn(duration: 1)))
         }
     }
+    
+    
+    
+    @ViewBuilder
+    public func onDragable(id: String) -> some View {
+        if #available(iOS 16, *) {
+            self
+        } else {
+            onDrag {
+                return NSItemProvider(object: id as NSString)
+            }
+        }
+    }
 }
