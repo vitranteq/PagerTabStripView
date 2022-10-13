@@ -1,13 +1,13 @@
 //
-//  PagerSetAppearModifier.swift
+//  PagerSetFirstAppearItemModifier.swift
 //  PagerTabStripView
 //
-//  Copyright © 2021 Xmartlabs SRL. All rights reserved.
+//  Created by teq-macm1-073 on 27/09/2022.
 //
 
 import SwiftUI
 
-struct PagerSetAppearItemModifier: ViewModifier {
+struct PagerSetFirstAppearItemModifier: ViewModifier {
 
     private var onPageAppear: () -> Void
 
@@ -21,9 +21,9 @@ struct PagerSetAppearItemModifier: ViewModifier {
                 .onChange(of: dataStore.forceUpdate) { _ in
                     DispatchQueue.main.async {
                         if let newIndex = getIndex(reader),
-                            newIndex >= 0,
+                           newIndex >= 0,
                             newIndex < dataStore.itemsCount {
-                            dataStore.setAppear(callback: onPageAppear, at: newIndex)
+                            dataStore.setFirstAppear(callback: onPageAppear, at: newIndex)
                             index = newIndex
                         }
                     }
@@ -31,12 +31,12 @@ struct PagerSetAppearItemModifier: ViewModifier {
                 .onAppear {
                     DispatchQueue.main.async {
                         if let index = getIndex(reader) {
-                            dataStore.setAppear(callback: onPageAppear, at: index)
                             self.index = index
+                            dataStore.setFirstAppear(callback: onPageAppear, at: index)
                         }
                     }
                 }
-        }
+            }
     }
 
     @EnvironmentObject private var dataStore: DataStore

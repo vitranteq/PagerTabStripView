@@ -78,14 +78,14 @@ private struct WrapperPagerTabStripView<Content>: View where Content: View {
 
     public var body: some View {
         GeometryReader { gproxy in
-            LazyHStack(spacing: 0) {
+            HStack(spacing: 0) {
                 content()
                     .frame(width: gproxy.size.width)
             }
             .coordinateSpace(name: "PagerViewScrollView")
             .offset(x: -CGFloat(self.selection) * gproxy.size.width)
             .offset(x: self.translation)
-            .animation(.interactiveSpring(response: 0.5, dampingFraction: 1.00, blendDuration: 0.25), value: selection)
+//            .animation(.interactiveSpring(response: 0.5, dampingFraction: 1.00, blendDuration: 0.25), value: selection)
             .animation(.interactiveSpring(response: 0.15, dampingFraction: 0.86, blendDuration: 0.25), value: translation)
             .gesture(
                 DragGesture(minimumDistance: 25).updating(self.$translation) { value, state, _ in
@@ -130,6 +130,7 @@ private struct WrapperPagerTabStripView<Content>: View where Content: View {
             .onChange(of: self.selection) { [selection] newIndex in
                 self.currentOffset = -(CGFloat(newIndex) * gproxy.size.width)
                 dataStore.items[newIndex]?.appearCallback?()
+                dataStore.items[newIndex]?.firstAppearCallback?()
                 dataStore.items[selection]?.tabViewDelegate?.setState(state: .normal)
                 if let tabViewDelegate = dataStore.items[newIndex]?.tabViewDelegate, newIndex != selection {
                     tabViewDelegate.setState(state: .selected)
@@ -142,11 +143,18 @@ private struct WrapperPagerTabStripView<Content>: View where Content: View {
                 self.selection = selection >= dataStore.itemsCount ? dataStore.itemsCount - 1 : selection
                 dataStore.items[selection]?.tabViewDelegate?.setState(state: .selected)
                 dataStore.items[selection]?.appearCallback?()
+                dataStore.items[selection]?.firstAppearCallback?()
+            }
+            .onChange(of: dataStore.forceUpdate) { _ in
+                DispatchQueue.main.async {
+                    dataStore.items.forEach { (key, item) in
+                        item.tabViewDelegate?.setState(state: key == selection ? .selected : .normal)
+                    }
+                }
             }
         }
         .modifier(NavBarModifier(selection: $selection))
         .environmentObject(self.dataStore)
         .clipped()
     }
-
 }

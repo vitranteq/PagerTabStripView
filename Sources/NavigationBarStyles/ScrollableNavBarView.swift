@@ -56,6 +56,11 @@ internal struct ScrollableNavBarView: View {
                     value.scrollTo(newSelection, anchor: .center)
                 }
             }
+            .onChange(of: dataStore.forceUpdate) { _ in
+                withAnimation {
+                    value.scrollTo(self.selection, anchor: .center)
+                }
+            }
         }
         .onAppear {
             switchAppeared = !switchAppeared
@@ -140,6 +145,19 @@ internal struct IndicatorScrollableBarView: View {
                 var newPosition = items.map({return $0.value.itemWidth ?? 0}).reduce(0, +)
                 newPosition += (style.tabItemSpacing * CGFloat(newValue)) + selectedItemWidth/2
                 position = newPosition
+            }
+            .onChange(of: dataStore.forceUpdate) { _ in
+                DispatchQueue.main.async {
+                    let items = dataStore.items.filter { index, _ in
+                        index < selection
+                    }
+                    selectedItemWidth = dataStore.items[selection]?.itemWidth ?? 0
+                    var newPosition = items.map({return $0.value.itemWidth ?? 0}).reduce(0, +)
+                    newPosition += (style.tabItemSpacing * CGFloat(selection)) + selectedItemWidth/2
+//                    withAnimation {
+                        position = newPosition
+//                    }
+                }
             }
         }
 
